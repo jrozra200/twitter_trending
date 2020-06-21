@@ -1,0 +1,65 @@
+---
+title: "Twitter Trends"
+author: "Jake Rozran"
+date: "6/20/2020"
+output: html_document
+---
+
+<style>
+.column-left{
+  float: left;
+  width: 45%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 45%;
+  text-align: left;
+}
+</style>
+
+```{r setup, echo = FALSE}
+library(rtweet)
+library(knitr)
+library(kableExtra)
+
+creds <- read.csv("twitter.config")
+creds$vars <- as.character(creds$vars)
+
+token <- create_token(app = "jake learns data science", 
+                      consumer_key = creds$vars[1], 
+                      consumer_secret = creds$vars[2], 
+                      access_token = creds$vars[3], 
+                      access_secret = creds$vars[4])
+
+# USA: 23424977
+# NYC: 2459115
+# Philly: 2471217
+```
+
+<div class="column-left">
+
+USA TRENDS
+```{r usa, echo = FALSE}
+USA_trends <- get_trends(woeid = "23424977", token = token)
+USA_trends$trending <- paste0("[", USA_trends$trend, 
+                              "](", USA_trends$url, ")")
+
+USA_trends[1:10, c("trending", "tweet_volume")] %>%
+    kable() %>%
+    kable_styling(bootstrap_options = c("striped", "hover"))
+```
+</div>
+<div class="column-right">
+
+PHILLY TRENDS
+```{r Philly, echo = FALSE}
+Philly_trends <- get_trends(woeid = "2471217", token = token)
+Philly_trends$trending <- paste0("[", Philly_trends$trend, 
+                                 "](", Philly_trends$url, ")")
+
+Philly_trends[1:10, c("trending", "tweet_volume")] %>%
+    kable() %>%
+    kable_styling(bootstrap_options = c("striped", "hover"))
+```
+</div>
